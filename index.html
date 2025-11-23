@@ -1,0 +1,448 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <title>YouTube Timestamp Link Generator | Share Video at Specific Time</title>
+    <meta name="description" content="Free tool to create YouTube links that start at a specific time. Easily generate timestamped URLs for videos and Shorts. No registration required.">
+    <meta name="keywords" content="youtube timestamp generator, youtube start time link, youtube link with timestamp, youtube specific time url, share youtube video from minute">
+    <meta name="author" content="Focss">
+    <link rel="canonical" href="https://ytstamper.focss.top/">
+    <meta name="msvalidate.01" content="5872786DAB158D4F6F7BE158695710BC" />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
+
+    <style>
+        :root {
+            --primary: #FF0000;
+            --primary-hover: #cc0000;
+            --bg-light: #f0f4f8;
+            --text-light: #1f2937;
+            --card-light: #ffffff;
+            --border-light: #e2e8f0;
+            
+            --bg-dark: #111827;
+            --text-dark: #f3f4f6;
+            --card-dark: #1f2937;
+            --border-dark: #374151;
+            
+            --shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--bg-light);
+            color: var(--text-light);
+            margin: 0;
+            padding: 0;
+            transition: background-color 0.3s, color 0.3s;
+            line-height: 1.6;
+        }
+
+        body.dark-mode {
+            background-color: var(--bg-dark);
+            color: var(--text-dark);
+        }
+
+        /* Header & Nav */
+        header {
+            background: var(--card-light);
+            padding: 1rem 2rem;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        body.dark-mode header {
+            background: var(--card-dark);
+            box-shadow: 0 1px 3px rgba(255,255,255,0.05);
+        }
+
+        .logo {
+            font-weight: 700;
+            font-size: 1.25rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .theme-toggle {
+            background: none;
+            border: none;
+            cursor: pointer;
+            font-size: 1.25rem;
+            color: inherit;
+        }
+
+        /* Main Container */
+        .container {
+            max-width: 800px;
+            margin: 3rem auto;
+            padding: 0 1rem;
+        }
+
+        /* Tool Card */
+        .tool-card {
+            background: var(--card-light);
+            border-radius: 16px;
+            padding: 2.5rem;
+            box-shadow: var(--shadow);
+            text-align: center;
+            margin-bottom: 4rem;
+            border: 1px solid var(--border-light);
+        }
+        body.dark-mode .tool-card {
+            background: var(--card-dark);
+            border-color: var(--border-dark);
+        }
+
+        h1 {
+            font-size: 2rem;
+            margin-bottom: 1rem;
+            font-weight: 800;
+        }
+        .subtitle {
+            color: #6b7280;
+            margin-bottom: 2rem;
+        }
+        body.dark-mode .subtitle { color: #9ca3af; }
+
+        /* Form Elements */
+        .input-group {
+            margin-bottom: 1.5rem;
+            text-align: left;
+        }
+        label {
+            display: block;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+            font-size: 0.95rem;
+        }
+        input[type="text"], input[type="number"] {
+            width: 100%;
+            padding: 12px 16px;
+            border-radius: 8px;
+            border: 2px solid var(--border-light);
+            background: var(--bg-light);
+            color: inherit;
+            font-size: 1rem;
+            box-sizing: border-box;
+            transition: all 0.2s;
+        }
+        body.dark-mode input {
+            background: #374151;
+            border-color: #4b5563;
+        }
+        input:focus {
+            outline: none;
+            border-color: var(--primary);
+            background: white;
+        }
+        body.dark-mode input:focus {
+            background: #1f2937;
+        }
+
+        /* Time Inputs Layout */
+        .time-inputs {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: 1rem;
+        }
+        .time-unit {
+            position: relative;
+        }
+        .time-unit span {
+            position: absolute;
+            right: 10px;
+            top: 50%;
+            transform: translateY(-50%);
+            font-size: 0.8rem;
+            color: #9ca3af;
+            pointer-events: none;
+        }
+
+        /* Action Button */
+        .btn-primary {
+            width: 100%;
+            background: var(--primary);
+            color: white;
+            border: none;
+            padding: 14px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: transform 0.1s, background 0.2s;
+        }
+        .btn-primary:hover {
+            background: var(--primary-hover);
+            transform: translateY(-1px);
+        }
+        .btn-primary:active {
+            transform: translateY(0);
+        }
+
+        /* Result Section */
+        .result-section {
+            margin-top: 2rem;
+            padding-top: 2rem;
+            border-top: 1px solid var(--border-light);
+            display: none;
+        }
+        body.dark-mode .result-section { border-color: var(--border-dark); }
+        
+        .result-section.active { display: block; animation: fadeIn 0.5s ease; }
+
+        .result-box {
+            display: flex;
+            gap: 10px;
+            margin-top: 10px;
+        }
+        .copy-btn {
+            background: #3b82f6; /* Blue */
+            color: white;
+            border: none;
+            border-radius: 8px;
+            padding: 0 20px;
+            font-weight: 600;
+            cursor: pointer;
+            white-space: nowrap;
+        }
+        .copy-btn:hover { background: #2563eb; }
+
+        /* SEO Content Section */
+        .content-section {
+            max-width: 700px;
+            margin: 0 auto;
+            line-height: 1.8;
+        }
+        .content-section h2 {
+            font-size: 1.5rem;
+            margin-top: 2.5rem;
+            color: var(--text-light);
+        }
+        body.dark-mode .content-section h2 { color: var(--text-dark); }
+        
+        .content-section p, .content-section li {
+            color: #4b5563;
+        }
+        body.dark-mode .content-section p, body.dark-mode .content-section li { color: #d1d5db; }
+        
+        .code-snippet {
+            background: #e5e7eb;
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-family: monospace;
+            font-weight: bold;
+            color: #dc2626;
+        }
+        body.dark-mode .code-snippet { background: #374151; color: #f87171; }
+
+        footer {
+            text-align: center;
+            padding: 2rem;
+            margin-top: 4rem;
+            color: #6b7280;
+            font-size: 0.9rem;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+    </style>
+
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "SoftwareApplication",
+      "name": "YouTube Timestamp Link Generator",
+      "applicationCategory": "UtilityApplication",
+      "operatingSystem": "Web",
+      "offers": {
+        "@type": "Offer",
+        "price": "0",
+        "priceCurrency": "USD"
+      },
+      "description": "A free tool to create YouTube links that start at a specific time timestamp."
+    }
+    </script>
+</head>
+<body>
+
+<header>
+    <div class="logo">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="red"><path d="M19.615 3.184c-3.604-.246-11.631-.245-15.23 0-3.897.266-4.356 2.62-4.385 8.816.029 6.185.484 8.549 4.385 8.816 3.6.245 11.626.246 15.23 0 3.897-.266 4.356-2.62 4.385-8.816-.029-6.185-.484-8.549-4.385-8.816zm-10.615 12.816v-8l8 3.993-8 4.007z"/></svg>
+        YT Stamper
+    </div>
+    <button class="theme-toggle" id="themeToggle" aria-label="Toggle Dark Mode">🌙</button>
+</header>
+
+<div class="container">
+    
+    <section class="tool-card">
+        <h1>YouTube Timestamp Generator</h1>
+        <p class="subtitle">Create a link that starts your video exactly where you want.</p>
+
+        <div class="input-group">
+            <label for="urlInput">Paste YouTube URL / Link</label>
+            <input type="text" id="urlInput" placeholder="e.g., https://www.youtube.com/watch?v=dQw4w9WgXcQ">
+        </div>
+
+        <div class="input-group">
+            <label>Start Time</label>
+            <div class="time-inputs">
+                <div class="time-unit">
+                    <input type="number" id="hours" min="0" placeholder="0">
+                    <span>h</span>
+                </div>
+                <div class="time-unit">
+                    <input type="number" id="minutes" min="0" max="59" placeholder="00">
+                    <span>m</span>
+                </div>
+                <div class="time-unit">
+                    <input type="number" id="seconds" min="0" max="59" placeholder="00">
+                    <span>s</span>
+                </div>
+            </div>
+        </div>
+
+        <button class="btn-primary" id="generateBtn">Generate Link</button>
+
+        <div class="result-section" id="resultSection">
+            <label style="text-align:left;">Your Timestamped Link:</label>
+            <div class="result-box">
+                <input type="text" id="outputUrl" readonly>
+                <button class="copy-btn" id="copyBtn">Copy</button>
+            </div>
+            <div style="margin-top:15px; text-align:left;">
+                <a href="#" id="previewLink" target="_blank" style="color:var(--primary); text-decoration:none; font-weight:600;">Test Link &rarr;</a>
+            </div>
+        </div>
+    </section>
+
+    <article class="content-section">
+        <h2>How to Create a YouTube Timestamp Link?</h2>
+        <p>Sharing a long YouTube video can be frustrating if you only want to show a specific moment. Using our <strong>YouTube Timestamp Generator</strong>, you can create a "deep link" that jumps directly to the seconds you choose.</p>
+        
+        <h3>Method 1: Use this Tool (Easiest)</h3>
+        <ol>
+            <li>Copy the URL of the video from your browser or app.</li>
+            <li>Paste it into the box above.</li>
+            <li>Enter the exact hour, minute, and second you want the video to start.</li>
+            <li>Click "Generate Link" and copy the result.</li>
+        </ol>
+
+        <h3>Method 2: Add the Timestamp Manually</h3>
+        <p>If you prefer to do it yourself, you can modify the URL by adding a query parameter to the end of the link:</p>
+        <ul>
+            <li><strong>For standard links:</strong> Add <span class="code-snippet">&t=1m30s</span> to the end (for 1 minute 30 seconds).</li>
+            <li><strong>For short links (youtu.be):</strong> Add <span class="code-snippet">?t=1m30s</span> to the end.</li>
+        </ul>
+
+        <h2>Frequently Asked Questions (FAQ)</h2>
+        
+        <div class="faq-item">
+            <h3>Why isn't my timestamp working?</h3>
+            <p>The most common reason is using the wrong separator. Standard YouTube URLs (watch?v=...) require an <strong>&</strong> (ampersand), while shortened URLs (youtu.be/...) require a <strong>?</strong> (question mark) before the "t". Our tool handles this automatically.</p>
+        </div>
+
+        <div class="faq-item">
+            <h3>Can I timestamp YouTube Shorts?</h3>
+            <p>Yes! However, the "Shorts" player doesn't always support time jumps perfectly. We recommend converting the "shorts" URL to a standard "watch" URL, which our tool does for you automatically.</p>
+        </div>
+
+        <div class="faq-item">
+            <h3>Does this work on Mobile?</h3>
+            <p>Yes. The generated links work on both desktop browsers and the YouTube mobile app (iOS and Android).</p>
+        </div>
+
+        <div class="faq-item">
+            <h3>Is my data safe? Do you store my links?</h3>
+            <p><strong>Absolutely safe!</strong> This tool runs entirely in your browser (client-side). We do not collect, store, or transmit any of your data to our servers. Your YouTube links and timestamps are processed locally on your device and never leave your computer. Feel free to use this tool with complete confidence.</p>
+        </div>
+    </article>
+
+</div>
+
+<footer>
+    &copy; 2025 YT Stamper Tool. All rights reserved.
+</footer>
+
+<script>
+    // DOM Elements
+    const generateBtn = document.getElementById('generateBtn');
+    const resultSection = document.getElementById('resultSection');
+    const outputUrl = document.getElementById('outputUrl');
+    const previewLink = document.getElementById('previewLink');
+    const copyBtn = document.getElementById('copyBtn');
+    const themeToggle = document.getElementById('themeToggle');
+    const body = document.body;
+
+    // Theme Toggle Logic
+    themeToggle.addEventListener('click', () => {
+        body.classList.toggle('dark-mode');
+        if (body.classList.contains('dark-mode')) {
+            themeToggle.innerText = '☀️';
+        } else {
+            themeToggle.innerText = '🌙';
+        }
+    });
+
+    // Generator Logic
+    generateBtn.addEventListener('click', () => {
+        let url = document.getElementById('urlInput').value.trim();
+        let h = parseInt(document.getElementById('hours').value) || 0;
+        let m = parseInt(document.getElementById('minutes').value) || 0;
+        let s = parseInt(document.getElementById('seconds').value) || 0;
+
+        if (!url) {
+            alert("Please paste a valid YouTube URL first.");
+            return;
+        }
+
+        // Convert 'shorts' URL to standard 'watch' URL for better compatibility
+        if (url.includes('/shorts/')) {
+            url = url.replace('/shorts/', '/watch?v=');
+        }
+
+        // Clean existing params
+        url = url.split('&t=')[0].split('?t=')[0].split('#t=')[0];
+
+        // Calculate total seconds for cleaner URL (optional, but YouTube supports both)
+        // Or stick to the h m s format which is more readable
+        let timeStr = "";
+        if (h > 0) timeStr += h + "h";
+        if (m > 0) timeStr += m + "m";
+        if (s > 0) timeStr += s + "s";
+        if (timeStr === "") timeStr = "0s";
+
+        // Determine separator
+        const separator = url.includes('?') ? '&' : '?';
+        const finalLink = `${url}${separator}t=${timeStr}`;
+
+        outputUrl.value = finalLink;
+        previewLink.href = finalLink;
+        
+        resultSection.classList.add('active');
+        copyBtn.innerText = "Copy";
+        copyBtn.style.background = "#3b82f6";
+    });
+
+    // Copy Logic
+    copyBtn.addEventListener('click', () => {
+        outputUrl.select();
+        outputUrl.setSelectionRange(0, 99999);
+        navigator.clipboard.writeText(outputUrl.value).then(() => {
+            copyBtn.innerText = "Copied!";
+            copyBtn.style.background = "#10b981"; // Green
+            setTimeout(() => {
+                copyBtn.innerText = "Copy";
+                copyBtn.style.background = "#3b82f6";
+            }, 2000);
+        });
+    });
+</script>
+
+</body>
+</html>
